@@ -258,6 +258,7 @@ async function getModelResult(text) {
       }
       const data = await res.json();
       return data.prediction;
+      console.log(data.prediction);
     } finally {
       clearTimeout(t);
     }
