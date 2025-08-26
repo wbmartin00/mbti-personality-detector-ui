@@ -2,6 +2,8 @@ const dropZoneBackground = document.getElementById('drop-zone'); //what changes 
 const dropZoneOverlay = document.getElementById("drop-zone-overlay"); //accepts the dropped files, because the other elements (scientist, text input) would otherwise interfere with a clean drop anywhere on the monitor screen
 const fileInput = document.getElementById("file-input");
 
+const API_BASE = 'https://mbti-api.fly.dev'; // Fly.io app URL
+
 let stepping = false; 
 const stepFrames = ["images/walk1.png", "images/walk2.png", "images/walk-1.png", "images/walk0.png"];
 let currentFrame = 0;
@@ -233,17 +235,39 @@ dropZoneOverlay.addEventListener("drop", (e) => {
     }
 });
 
-//Send text to the AI model
 
+//Send text to the AI model
 async function getModelResult(text) {
-    const response = await fetch('http://127.0.0.1:5000/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+  // Client-side timeout so the UI doesn't wait forever
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 5000); // 5s
+
+  try {
+    const res = await fetch(`${API_BASE}/predict`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors',               
+      body: JSON.stringify({ text }),
+      signal: controller.signal
     });
 
-    const result = await response.json();
-    return result.prediction;
+    clearTimeout(t);
+
+    if (!res.ok) {
+      // Catch server message for debugging
+      const msg = await res.text().catch(() => '');
+      throw new Error(`API error ${res.status}: ${msg || res.statusText}`);
+    }
+
+    const data = await res.json();
+    // backend returns { prediction: "..." }
+    return data.prediction;
+  } catch (err) {
+    clearTimeout(t);
+    console.error('getModelResult failed:', err);
+    // friendly error message in UI can go here
+    throw err;
+  }
 }
 
 //add class to trigger neon flicker animation
