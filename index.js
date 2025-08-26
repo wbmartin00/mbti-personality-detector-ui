@@ -237,36 +237,39 @@ dropZoneOverlay.addEventListener("drop", (e) => {
 
 
 //Send text to the AI model
+// Safer client timeout + retry
 async function getModelResult(text) {
-  // Client-side timeout so the UI doesn't wait forever
-  const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), 5000); // 5s
+  const attempt = async (timeoutMs) => {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const res = await fetch(`${API_BASE}/predict`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors',
+        body: JSON.stringify({ text }),
+        signal: controller.signal
+      });
+      clearTimeout(t);
+      if (!res.ok) {
+        const msg = await res.text().catch(() => '');
+        throw new Error(`API error ${res.status}: ${msg || res.statusText}`);
+      }
+      const data = await res.json();
+      return data.prediction;
+    } finally {
+      clearTimeout(t);
+    }
+  };
 
   try {
-    const res = await fetch(`${API_BASE}/predict`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      mode: 'cors',               
-      body: JSON.stringify({ text }),
-      signal: controller.signal
-    });
-
-    clearTimeout(t);
-
-    if (!res.ok) {
-      // Catch server message for debugging
-      const msg = await res.text().catch(() => '');
-      throw new Error(`API error ${res.status}: ${msg || res.statusText}`);
-    }
-
-    const data = await res.json();
-    // backend returns { prediction: "..." }
-    return data.prediction;
+    // First attempt with 30s
+    return await attempt(30000);
   } catch (err) {
-    clearTimeout(t);
-    console.error('getModelResult failed:', err);
-    // friendly error message in UI can go here
-    throw err;
+    console.warn('first attempt failed, retrying once...', err);
+    // One quick warm retry with 15s
+    return await attempt(15000);
   }
 }
 
