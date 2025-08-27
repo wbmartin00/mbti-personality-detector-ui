@@ -2,6 +2,8 @@
 
 A lightweight, retro-styled frontend for a DistilBERT-based MBTI personality type classifier. Type or paste text, drag and drop .pdf, .txt or .docx, and send it to a prediction API, and get a 1-of-16 MBTI label with optional scores accompanied by fun retro-monochrome animations.
 
+Try it out here!: [https://wbmartin00.github.io/mbti-personality-detector-ui/](https://wbmartin00.github.io/mbti-personality-detector-ui/)
+
 > This repository contains only the frontend (HTML/CSS/JS). It’s designed to work with a separate API that exposes a POST /predict endpoint.
 
 ---
