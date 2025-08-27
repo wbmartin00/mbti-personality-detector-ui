@@ -257,7 +257,7 @@ async function getModelResult(text) {
         throw new Error(`API error ${res.status}: ${msg || res.statusText}`);
       }
         const data = await res.json();
-        console.log(data.prediction);
+        console.log(data.prediction, data.scores);
         return data.prediction;
 
     } finally {
