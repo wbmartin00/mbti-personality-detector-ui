@@ -603,6 +603,7 @@ text.center-title-2 {
 
 .scientist-media {
     display: flex;
+    width: 96px;
     background-color: rgb(0, 6, 5);
 }
 
