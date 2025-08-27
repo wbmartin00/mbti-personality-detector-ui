@@ -256,9 +256,10 @@ async function getModelResult(text) {
         const msg = await res.text().catch(() => '');
         throw new Error(`API error ${res.status}: ${msg || res.statusText}`);
       }
-      const data = await res.json();
-      return data.prediction;
-      console.log(data.prediction);
+        const data = await res.json();
+        console.log(data.prediction);
+        return data.prediction;
+
     } finally {
       clearTimeout(t);
     }
@@ -266,9 +267,9 @@ async function getModelResult(text) {
 
   try {
     // First attempt with 30s
-    return await attempt(30000);
+    return await attempt(40000);
   } catch (err) {
-    console.warn('first attempt failed, retrying once...', err);
+    console.warn('first attempt failed, retrying one more time...', err);
     // One quick warm retry with 15s
     return await attempt(15000);
   }
