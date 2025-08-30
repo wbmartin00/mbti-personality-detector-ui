@@ -1,4 +1,4 @@
-	# MBTI Personality Detector — UI
+## MBTI Personality Detector — UI
 
 A lightweight, retro-styled frontend for a DistilBERT-based MBTI personality type classifier. Type or paste text, drag and drop .pdf, .txt or .docx, and send it to a prediction API, and get a 1-of-16 MBTI label with optional scores accompanied by fun retro-monochrome animations.
 
