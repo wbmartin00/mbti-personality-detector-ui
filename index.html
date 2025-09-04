@@ -4,7 +4,6 @@
     <title>MBTI Personality Detector</title>
     <link rel="stylesheet" href="styles.css">
 
-    <base href="/mbti-personality-detector-ui/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fascinate&family=Playwrite+NO:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
@@ -15,15 +14,18 @@
     <!-- For PDF parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 
 </head>
 <body>
+
     <div class="top-banner"></div>
 
     <div class="title-container">
-        <img src="images/title/mbti-title.png" alt="" class="title-mbti-image">
-        <img src="images/title/personality1.png" alt="" class="title-personality-image">
-        <img src="images/title/detect5.png" alt="" class="title-detector-image">
+        <img src="/images/title/mbti-title.png" alt="" class="title-mbti-image">
+        <img src="/images/title/personality1.png" alt="" class="title-personality-image">
+        <img src="/images/title/detect5.png" alt="" class="title-detector-image">
     </div>
 
     <div class="shelf-container">
@@ -57,12 +59,13 @@
             <img src="images/shelf/neonlight end right.png" alt="" class="neon-light-9">
         </div>
 
-
-
     </div>
 
-    <div class="app-stage">
+    <div class="main-body-container">
+
         <div class="main-body">
+
+            <div class="left-buffer-main-body"></div>
 
             <div class="left-pane">
 
@@ -97,7 +100,7 @@
 
             <div class="right-pane" id="drop-zone">
                 <div>
-                    <img src="images/cpu monitor/monitor wow.png" alt="" class="cpu-monitor-pic">
+                    <img src="/images/cpu monitor/monitor wow.png" alt="" class="cpu-monitor-pic">
                 </div>
 
                 <div id="drop-zone-overlay"></div>
@@ -114,7 +117,7 @@
                     <span class="scientist-text" id="scientist-text"></span>
                 </div>
                 <div class="right-logo-container">
- 
+
                     <div>
                         <img src="images/upload3.png" alt="" class="upload">
                     </div>
@@ -135,6 +138,8 @@
     <div class="bottom-banner">
 
     </div>
+
+
 
     <script type="text/javascript" src="index.js"></script>
 </body>
