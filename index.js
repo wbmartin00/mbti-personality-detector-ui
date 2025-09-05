@@ -13,6 +13,26 @@ let moving = false;
 let scientistX = 0;
 let moveDirection = 'right';
 
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+function centerViewportX() {
+  const scroller = document.scrollingElement || document.documentElement;
+  const total = scroller.scrollWidth;     
+  const view  = window.innerWidth;
+  const x = Math.max(0, (total - view) / 2);
+    scroller.scrollLeft = x;
+}
+
+
+window.addEventListener('load', () => {
+  requestAnimationFrame(() => {
+    centerViewportX();
+    // small safety retries for any late layouts
+    setTimeout(centerViewportX, 0);
+    setTimeout(centerViewportX, 60);
+  });
+});
+
 
 function think(result) {
 
