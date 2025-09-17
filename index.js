@@ -13,6 +13,12 @@ let moving = false;
 let scientistX = 0;
 let moveDirection = 'right';
 
+
+typeOutText('scientist-text', 'Paste or upload a piece of writing to detect their personality type!', speed = 20);
+
+
+//Center content on load
+
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 function centerViewportX() {
@@ -33,6 +39,22 @@ window.addEventListener('load', () => {
   });
 });
 
+
+const walkFrames = [
+  "images/walk1.png",
+  "images/walk2.png",
+  "images/walk-1.png",
+  "images/walk0.png",
+  "images/scientist paper.jpg",
+  "images/eureka.jpeg"
+];
+
+walkFrames.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
+//think + walk function
 
 function think(result) {
 
@@ -76,41 +98,52 @@ function think(result) {
     currentFrame = 0;
     step(performance.now());
 
-    function move(timestamp) {
-        
-        if (timestamp - start < 950) {
-            scientistX += 1.5; // Scientist walk speed
-            if (moveDirection !== 'right') {
+
+
+
+    function move() {
+        let previousTimestamp = null;
+
+        function animate(timestamp) {
+            if (!previousTimestamp) previousTimestamp = timestamp;
+            const deltaTime = timestamp - previousTimestamp;
+            previousTimestamp = timestamp;
+
+            const elapsed = timestamp - start;
+            const directionMultiplier = elapsed < 950 ? 1 : -1;
+
+            scientistX += directionMultiplier * 0.15 * deltaTime; // Adjust speed
+            scientistMediaContainer.style.transform = `translateX(${scientistX}px)`;
+
+            if (directionMultiplier === 1 && moveDirection !== 'right') {
                 moveDirection = 'right';
-                scientistMediaContainer.style.transform = `translateX(${scientistX}px)`;
                 scientistImage.style.transform = `scaleX(1)`; 
-            }
-            else {
-                scientistMediaContainer.style.transform = `translateX(${scientistX}px)`;
-            }
-        }
-        else {
-            scientistX -= 1.5; // Scientist walk speed
-            if (moveDirection !== 'left') {
+            } else if (directionMultiplier === -1 && moveDirection !== 'left') {
                 moveDirection = 'left';
-                scientistMediaContainer.style.transform = `translateX(${scientistX}px)`;
                 scientistImage.style.transform = `scaleX(-1)`;
             }
-            else {
-                scientistMediaContainer.style.transform = `translateX(${scientistX}px)`;
+
+            if (elapsed < 1900) {
+                requestAnimationFrame(animate);
+            } else {
+                moving = false;
             }
+
+
+            //console.log('deltaTime:', deltaTime.toFixed(2), 'ms');   <---testing frame rate for button hit vs hitting enter key. 
+
+            scientistText.classList.add('text-stay');
         }
 
-        if (timestamp - start < 1900) {
-            requestAnimationFrame(move);
-        } else {
-            moving = false;
-        }
-
-        scientistText.classList.add('text-stay');
-
+        requestAnimationFrame(animate);
     }
-    move(performance.now());
+
+    move();
+
+    setTimeout(() => {
+        scientistX = 0;
+        scientistMediaContainer.style.transform = `translateX(0px)`;
+    }, 1901);
 
     setTimeout(async () => {
         scientistImage.style.transform = `scaleX(1)`; 
@@ -139,31 +172,54 @@ function think(result) {
     
 };
 
-//Manually hit enter to send text to model
+//pre-send / send handler
 
 let canSend = true;
 
-document.querySelector('.text-input').addEventListener('keydown', async (e) => {
+async function handleSend(textInput) {
+    if (!canSend) return;
+    canSend = false;
+
+    const text = textInput;
+    let result = '';
+    result = await getModelResult(text);
+    console.log(result);
+
+    requestAnimationFrame(() => think(result));
+
+    setTimeout(() => {
+        canSend = true;
+    }, 6000);
+}
+
+
+// Enter key listener
+
+textInputField = document.querySelector('.text-input');
+
+textInputField.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
         e.preventDefault();
 
-        if (!canSend) return;
-        canSend = false;
-
-        const text = e.target.value;
-        let result = '';
-        result = await getModelResult(text);
-        console.log(result);
-
-        think(result);
-
-        setTimeout(() => {
-            canSend = true;
-        }, 6000);
+        if (textInputField.value == "") {
+            typeOutText("scientist-text", "Hmm...  Enter some text and try again!", speed = 80);
+            return;
+        }
+        await handleSend(e.target.value);
     }
 });
 
-typeOutText('scientist-text', 'Paste or upload a piece of writing to detect their personality type!', speed = 20);
+// Button click listener (mirrors Enter key)
+document.querySelector('.enter-button').addEventListener('mousedown', async (e) => {
+    e.preventDefault();
+    const input = document.querySelector('.text-input');
+
+    if (input.value == "") {
+        typeOutText("scientist-text", "Hmm...  Enter some text and try again!", speed = 80);
+        return;
+    }
+    await handleSend(input.value);
+});
 
 
 // ------  Dropzone overlay listeners  ---------
@@ -184,6 +240,77 @@ dropZoneOverlay.addEventListener("dragleave", () => {
 });
 
 // ------  File import and parse from pdf, docx or txt -------
+
+//file upload button functionality
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileUploadButton = document.querySelector('.file-upload-button');
+    const fileInput = document.getElementById('file-input');
+
+    fileUploadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const fileName = file.name.toLowerCase();
+
+        if (fileName.endsWith('.txt')) {
+            // Plain text
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const contents = e.target.result;
+                await handleSend(contents);
+                console.log(contents);
+            };
+            reader.readAsText(file);
+        }
+
+        else if (fileName.endsWith('.docx')) {
+            // DOCX using Mammoth
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const arrayBuffer = e.target.result;
+
+                const result = await mammoth.extractRawText({ arrayBuffer });
+                await handleSend(result.value);
+
+                console.log(result.value);
+
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        else if (fileName.endsWith('.pdf')) {
+            // PDF using pdf.js
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const typedArray = new Uint8Array(e.target.result);
+                const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+
+                let allText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    const pageText = content.items.map(item => item.str).join(' ');
+                    allText += pageText + '\n';
+                }
+
+                await handleSend(allText);
+                console.log(allText);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        else {
+            typeOutText('scientist-text',"Ahem.... that file type is unsupported. Please use .txt, .docx, or .pdf", speed = 20);
+        }
+    });
+});
+
+//drag and drop files functionality
 
 dropZoneOverlay.addEventListener("drop", (e) => {
     e.preventDefault();
