@@ -3,8 +3,9 @@
 <head>
     <title>MBTI Personality Detector</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=dev2">
 
-    <base href="/mbti-personality-detector-ui/">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fascinate&family=Playwrite+NO:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
@@ -15,7 +16,15 @@
     <!-- For PDF parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <link rel="preload" as="image" href="images/walk1.png">
+    <link rel="preload" as="image" href="images/walk2.png">
+    <link rel="preload" as="image" href="images/walk-1.png">
+    <link rel="preload" as="image" href="images/walk0.png">
+    <link rel="preload" as="image" href="images/scientist paper.jpg">
+    <link rel="preload" as="image" href="images/eureka.jpeg">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">    
 
 
 </head>
@@ -127,10 +136,18 @@
 
                         <span class="drag-and-drop-text">drag & drop</span>
 
+                        <button class="file-upload-button">
+                            File <br> upload
+                            <img src="images/upload7.png" alt="" class="upload-button-picture">
+                        </button>
+
                     </div>
 
                     <div class="text-input-container">
                         <input type="text" placeholder="Write/paste your text here" class="text-input">
+                        <button class="enter-button">
+                            <img src="images/enter/enterarrowamaze.png" alt="" class="enter-png">
+                        </button>
                     </div>
 
                     <input type="file" id="file-input">
