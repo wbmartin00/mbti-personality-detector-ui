@@ -755,7 +755,7 @@ text.center-title-2 {
 }
 
 .enter-button {
-    height: 65%;
+    height: 38px;
     margin-bottom: 15px;
     display: flex;
     border-radius: 15px;
@@ -780,6 +780,11 @@ text.center-title-2 {
 
 .enter-button:focus {
     outline: none;
+}
+
+.enter-png {
+    height: 100%;
+    width: auto;
 }
 
 .bottom-banner {
