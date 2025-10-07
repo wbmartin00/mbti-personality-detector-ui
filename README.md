@@ -4,6 +4,8 @@ A lightweight, retro-styled frontend for a DistilBERT-based MBTI personality typ
 
 Try it out here!: [https://wbmartin00.github.io/mbti-personality-detector-ui/](https://wbmartin00.github.io/mbti-personality-detector-ui/)
 
+![](/images/ss1.png)
+
 > This repository contains only the frontend (HTML/CSS/JS). It’s designed to work with a separate API that exposes a POST /predict endpoint.
 
 ---
