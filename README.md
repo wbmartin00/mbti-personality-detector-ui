@@ -15,7 +15,7 @@ There are a lot of fun animations and features I built in, but the main gist is 
 
 The heavy lifting went into creating the SVG menu from scratch, and creating animations using just HTML/CSS/JS. It's really interesting seeing the limitations of vanilla JS/CSS when using their native animation features. There were lots of issues with jitter, frame rate and rendering that had to be worked through, especially when optimizing for mobile, for what I thought were simple use cases. 
 
-Alas, this was a fun project where most of the image assets I generated from Dall-E or Midjourney, and then integrated and dynamically animated them with JS/CSS. 
+Alas, this was a fun project where most of the visual image assets I generated from Dall-E or Midjourney, and then integrated and dynamically animated them with JS/CSS. 
 
 ## Some cool features and animations include:
 
@@ -77,9 +77,8 @@ If your backend uses different field names, map them in `index.js` where the res
 
 ## Credits 
 
-- The SVG Radial Menu was originally inspired by ‘Cognitive Functions.svg’ (JakeBeech / Wikimedia Commons, CC0), though I then coded my own SVG version from scratch. 
+The SVG Radial Menu was originally inspired by ‘Cognitive Functions.svg’ (JakeBeech / Wikimedia Commons, CC0), though I then coded my own SVG version from scratch. 
 
----
 
 ##  License
 
