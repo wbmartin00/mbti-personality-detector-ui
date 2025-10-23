@@ -1,9 +1,9 @@
-# MBTI Personality Detector User Interface
+# MBTI Personality Detector - User Interface
 
 
 This is the frontend for my DistilBERT model that classifies your personality type based on text input (out of the 16 MBTI personality types). 
 
-Try it out here!: [https://wbmartin00.github.io/mbti-personality-detector-ui/](https://wbmartin00.github.io/mbti-personality-detector-ui/)
+Try it out here: [https://wbmartin00.github.io/mbti-personality-detector-ui/](https://wbmartin00.github.io/mbti-personality-detector-ui/)
 
 ![](/images/ss1.png)
 
