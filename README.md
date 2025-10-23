@@ -1,4 +1,5 @@
-# MBTI Personality Detector — UI
+# MBTI Personality Detector User Interface
+
 
 This is the frontend for my DistilBERT model that classifies your personality type based on text input (out of the 16 MBTI personality types). 
 
@@ -16,7 +17,7 @@ The heavy lifting went into creating the SVG menu from scratch, and creating ani
 
 Alas, this was a fun project where most of the image assets I generated from Dall-E or Midjourney, and then integrated and dynamically animated them with JS/CSS. 
 
-Some cool features and animations include:
+## Some cool features and animations include:
 
 - Clickable arc segments reveal detailed type descriptions
 - Scanlines, grime layers, phosphor glow, and neon sign flickers
