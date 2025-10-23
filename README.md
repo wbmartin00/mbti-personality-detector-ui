@@ -1,37 +1,57 @@
-## MBTI Personality Detector — UI
+	# MBTI Personality Detector — UI
 
-A lightweight, retro-styled frontend for a DistilBERT-based MBTI personality type classifier. Type or paste text, drag and drop .pdf, .txt or .docx, and send it to a prediction API, and get a 1-of-16 MBTI label with optional scores accompanied by fun retro-monochrome animations.
+This is the frontend for my DistilBERT model that classifies your personality type based on text input (out of the 16 MBTI personality types). 
 
 Try it out here!: [https://wbmartin00.github.io/mbti-personality-detector-ui/](https://wbmartin00.github.io/mbti-personality-detector-ui/)
 
 ![](/images/ss1.png)
 
-> This repository contains only the frontend (HTML/CSS/JS). It’s designed to work with a separate API that exposes a POST /predict endpoint.
+I went with a fun, vintage cold war theme. This is pure vanilla JS, with an interactive SVG radial menu, that allows users to select and learn more about the different personality types. 
 
----
+There are a lot of fun animations and features I built in, but the main gist is that you can type, paste, drag-and-drop, or click upload to send your text file to the model for inference and an animation will display your result!
 
-##  Features
-- Zero-build static app (plain HTML/CSS/JS) — open locally or host on GitHub Pages.
-- Retro console aesthetic with a circular MBTI visualization (`MBTICircleSVG.js`).
-- API-agnostic: works with any compatible `/predict` endpoint that accepts raw text and returns a type (and optionally probabilities).
-- Single-file tweakability: point the UI at a different backend by editing one constant.
+>This repo is only the frontend, the DistilBERT model and API have their own repos. 
 
----
+The heavy lifting went into creating the SVG menu from scratch, and creating animations using just HTML/CSS/JS. It's really interesting seeing the limitations of vanilla JS/CSS when using their native animation features. There were lots of issues with jitter, frame rate and rendering that had to be worked through, especially when optimizing for mobile, for what I thought were simple use cases. 
+
+Alas, this was a fun project where most of the image assets I generated from Dall-E or Midjourney, and then integrated and dynamically animated them with JS/CSS. 
+
+Some cool features and animations include:
+
+- Clickable arc segments reveal detailed type descriptions
+- Scanlines, grime layers, phosphor glow, and neon sign flickers
+- Highlight system distinguishes model predictions from user explorations
+- SVG "sweeping highlight beam" animations using SVG `clipPath` and easing
+- Radial menu outlines "highlight" animation around the circle as the model is "thinking"
+
+###  Scientist Animation (Thinking & Reacting)
+
+- The scientist character **walks, pauses, and reacts** as input is processed
+- Animation timing is synced with model inference steps
+- Mobile-friendly animation reworks ensure smooth UX on phones
+
+###  Typing Console Output
+
+- All messages (errors, prompts, predictions) are dynamically **typed out** character-by-character
+- Dual typing animation systems for scientist captions and console text output
+- Cancelable and reentrant animations for snappy feedback
+
 
 ##  Project structure
 
 ```
 .
 ├─ index.html            # App shell
-├─ styles.css            # Theme and layout
+├─ styles.css            # Styling
 ├─ index.js              # App logic + API calls
-├─ MBTICircleSVG.js      # Circular MBTI graphic + helpers
-└─ images/               # UI assets
+├─ MBTICircleSVG.js      # SVG Radial Menu
+└─ images/               # Image/PNG assets
 ```
 
 ---
 
-##  Configuration
+
+##  If you want to use a different model on the backend:
 
 Edit `index.js` and set your API base. For example:
 
@@ -54,62 +74,9 @@ const API_BASE = "https://your-mbti-api.example.com"; // no trailing slash
 
 If your backend uses different field names, map them in `index.js` where the response is parsed.
 
----
+## Credits 
 
-##  Run locally
-
-You can double-click `index.html` to open it, but most browsers block `fetch()` from `file://` URLs. Use a tiny static server:
-
-**Option A: Python (built-in)**
-```bash
-# from the repo root
-python3 -m http.server 5500
-# visit http://localhost:5500
-```
-
-**Option B: Node (serve)**
-```bash
-npm i -g serve
-serve -l 5500
-# visit http://localhost:5500
-```
-
----
-
-##  Deploy to GitHub Pages
-1. Commit your changes to `main`.
-2. In your repo on GitHub: **Settings → Pages**
-   - **Source:** Deploy from a branch
-   - **Branch:** `main` (root)
-3. Save. Your site will build and appear at the URL shown on that page.
-
-> Tip: Pages serves static files only. Ensure `API_BASE` points to a publicly reachable backend (e.g., Fly.io/Render/Railway). Do **not** embed secrets in this repo.
-
----
-
-##  Customization ideas
-- Swap in your own logo/assets under `images/`.
-- Adjust the palette and glow effects in `styles.css`.
-- Modify the MBTI wheel labels/positions in `MBTICircleSVG.js`.
-- Display trait-level scores if your API returns them.
-
----
-
-##  Quick health check
-
-If the UI loads but predictions fail:
-- Open DevTools → **Network** tab and submit a sample.
-- Confirm the request is hitting `https://your-api/predict`.
-- Check CORS on the backend (`Access-Control-Allow-Origin` should include your site origin or `*` for testing).
-- Verify the response JSON field names match what `index.js` expects.
-
----
-
-##  Roadmap (nice-to-haves)
-- Loading state + error toasts
-- Copy-link with prefilled text (`?q=...`)
-- Persist last input via `localStorage`
-- Accessibility pass and reduced-motion mode
+- The SVG Radial Menu was originally inspired by ‘Cognitive Functions.svg’ (JakeBeech / Wikimedia Commons, CC0), though I then coded my own SVG version from scratch. 
 
 ---
 
@@ -119,7 +86,3 @@ MIT — see [LICENSE](./LICENSE).
 
 ---
 
-##  Credits
-
-Frontend by **Will Martin**. DistilBERT MBTI classifier served separately.  
-Repository: `wbmartin00/mbti-personality-detector-ui`
